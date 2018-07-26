@@ -1,0 +1,49 @@
+/* TODO: Remove this style.  This is just for demo purposes. */
+html, body {
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.sure-toast {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 10000;
+    background-color: #353535;
+    color: #FEFEFE;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.sure-toast-success {
+    background-color: #28A745;
+}
+
+.sure-toast-error {
+    background-color: #CB3837
+}
+
+.sure-toast .toast-icon {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.sure-toast .action-container {
+    
+}
+
+.sure-toast .toast-action {
+    margin-right: 10px;
+    margin-left: 10px;
+    text-decoration: none;
+}
+
+.sure-toast .toast-action i::before {
+    padding-right: 5px;
+}
