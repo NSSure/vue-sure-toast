@@ -1,31 +1,63 @@
 /* TODO: Remove this style.  This is just for demo purposes. */
 html, body {
     font-family: 'Roboto', Helvetica, Arial, sans-serif;
-    padding: 0;
     margin: 0;
     height: 100%;
     width: 100%;
 }
 
+#sure-toast-root {
+    position: fixed;
+    z-index: 10000;
+}
+
 .sure-toast {
     display: flex;
     flex-direction: row;
-    width: 100%;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    z-index: 10000;
+    position: relative;
     background-color: #353535;
     color: #FEFEFE;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
-.sure-toast-success {
+#sure-toast-root.bottom {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+#sure-toast-root.top {
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+#sure-toast-root.top-left {
+    top: 0;
+    left: 0;
+}
+
+#sure-toast-root.top-right {
+    top: 0;
+    right: 0;
+}
+
+#sure-toast-root.bottom-left {
+    bottom: 0;
+    left: 0;
+}
+
+#sure-toast-root.bottom-right {
+    bottom: 0;
+    right: 0;
+}
+
+.sure-toast.success {
     background-color: #28A745;
 }
 
-.sure-toast-error {
+.sure-toast.error {
     background-color: #CB3837
 }
 
@@ -35,15 +67,30 @@ html, body {
 }
 
 .sure-toast .action-container {
-    
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .sure-toast .toast-action {
     margin-right: 10px;
     margin-left: 10px;
     text-decoration: none;
+    color: #9DC2FA;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.8rem;
 }
 
-.sure-toast .toast-action i::before {
-    padding-right: 5px;
+.sure-toast .toast-action:hover {
+    text-decoration: underline;
+}
+
+.sure-toast.success .toast-action {
+    color: #3FEAAB;
+}
+
+.sure-toast.error .toast-action {
+    color: #FFAEAD;
 }

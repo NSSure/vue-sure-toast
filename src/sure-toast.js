@@ -2,9 +2,8 @@
 API Options (Can be override from show call)
 - openDelay = 0
 - enableManualDismiss = true
-- type (stretch, contained) = stretch
 - position (top-left, top-right, bottom-right, bottom-left, top, bottom)
-- colors []
+- limit = 0
 */
 
 function parseAction(action) {
@@ -23,7 +22,7 @@ function parseAction(action) {
     return anchor;
 }
 
-function createContainer(options) {
+function createToast(options) {
     let toast = document.createElement("div");
 
     toast.classList.add('sure-toast');
@@ -39,52 +38,86 @@ function createContainer(options) {
 }
 
 function applyTheme(toast, theme) {
-    switch(theme) {
-        case 'success':
-            toast.classList.add('sure-toast-success');
-            break;
-        case 'error':
-            toast.classList.add('sure-toast-error');
-            break;
-        default:
-            break;
+    toast.classList.add(theme);
+}
+
+function applyPosition(toast, position) {
+    toast.classList.add(position);
+}
+
+function setDefaultOptions(options, defaultOptions) {
+    options = Object.assign(options, defaultOptions);
+
+    options.openDelay = options.openDelay || 0;
+    options.enableManualDismiss = options.enableManualDismiss || false;
+    options.position = options.position || 'top-right';
+
+    return options;
+}
+
+function configureRootElement(options) {
+    var root = document.getElementById('sure-toast-root');
+
+    if(!root) {
+        root = document.createElement("div");
+        root.id = "sure-toast-root";
+
+        document.body.appendChild(root);
     }
+
+    applyPosition(root, options.position);
+
+    return root;
+}
+
+function buildToastId() {
+    return `sure-toast-${Math.floor((Math.random() * 10000) + 1)}`;
 }
 
 const Popup = {
     install(Vue, defaultOptions) {
         Vue.prototype.$sureToast = {
             defaultOptions: defaultOptions,
+            toastsLoaded: 0,
             show(message, icon, options) {
-                options = Object.assign(options, defaultOptions);
+                options = setDefaultOptions(options, defaultOptions);
 
-                this.dismiss();
-        
-                let toast = createContainer(options);
+                if(this.toastsLoaded < options.limit) {
+                    var id = buildToastId();
+
+                    let toast = createToast(options);
+                    toast.id = id;
                 
-                let messageBody = document.createElement('span');
-                messageBody.innerHTML = `<i class="toast-icon ${icon}"></i> ${message}`;
+                    let messageBody = document.createElement('span');
+                    messageBody.innerHTML = `<i class="toast-icon ${icon}"></i> ${message}`;
 
-                toast.appendChild(messageBody);
+                    toast.appendChild(messageBody);
 
-                if(options.action) {
-                    let actionContainer = document.createElement("div");
-                    actionContainer.classList.add("action-container");
-                    
-                    let action = parseAction(options.action);
-                    actionContainer.appendChild(action);
+                    if(options.action) {
+                        let actionContainer = document.createElement("div");
+                        actionContainer.classList.add("action-container");
+                        
+                        let action = parseAction(options.action);
+                        actionContainer.appendChild(action);
 
-                    toast.appendChild(actionContainer);
+                        toast.appendChild(actionContainer);
+                    }
+
+                    var root = configureRootElement(options);
+                    root.appendChild(toast);
+
+                    this.toastsLoaded++;
+
+                    setTimeout(() => this.dismiss(toast), options.interval);
                 }
-
-                document.body.appendChild(toast);
-                setTimeout(() => this.dismiss(), options.interval);
+                else {
+                    console.log('Toast limit reached.');
+                }
             },
-            dismiss() {
-                let existingPopup = document.getElementById("sure-snippets-popup");
-        
-                if(existingPopup) {
-                    existingPopup.remove();
+            dismiss(toast) {
+                if(toast) {
+                    toast.remove();
+                    this.toastsLoaded--;
                 }
             }
         }
