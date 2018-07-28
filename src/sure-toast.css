@@ -1,14 +1,7 @@
-/* TODO: Remove this style.  This is just for demo purposes. */
-html, body {
-    font-family: 'Roboto', Helvetica, Arial, sans-serif;
-    margin: 0;
-    height: 100%;
-    width: 100%;
-}
-
 #sure-toast-root {
     position: fixed;
     z-index: 10000;
+    margin: 15px;
 }
 
 .sure-toast {

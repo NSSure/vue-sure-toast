@@ -41,16 +41,16 @@ function applyTheme(toast, theme) {
     toast.classList.add(theme);
 }
 
-function applyPosition(toast, position) {
-    toast.classList.add(position);
+function applyPosition(root, position) {
+    root.classList.add(position);
 }
 
 function setDefaultOptions(options, defaultOptions) {
-    options = Object.assign(options, defaultOptions);
-
     options.openDelay = options.openDelay || 0;
     options.enableManualDismiss = options.enableManualDismiss || false;
     options.position = options.position || 'top-right';
+
+    //options = Object.assign(options, defaultOptions);
 
     return options;
 }
@@ -79,6 +79,7 @@ const Popup = {
         Vue.prototype.$sureToast = {
             defaultOptions: defaultOptions,
             toastsLoaded: 0,
+            toasts: [],
             show(message, icon, options) {
                 options = setDefaultOptions(options, defaultOptions);
 
@@ -106,12 +107,13 @@ const Popup = {
                     var root = configureRootElement(options);
                     root.appendChild(toast);
 
+                    this.toasts.push(toast);
                     this.toastsLoaded++;
 
                     setTimeout(() => this.dismiss(toast), options.interval);
                 }
                 else {
-                    console.log('Toast limit reached.');
+                    // Toast limit reached.
                 }
             },
             dismiss(toast) {
@@ -119,6 +121,12 @@ const Popup = {
                     toast.remove();
                     this.toastsLoaded--;
                 }
+            },
+            dismissAll() {
+                this.toasts.forEach((toast) => {
+                    toast.remove();
+                    this.toastsLoaded--;
+                });
             }
         }
     }
