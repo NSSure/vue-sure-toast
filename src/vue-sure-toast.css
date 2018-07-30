@@ -12,6 +12,7 @@
     color: #FEFEFE;
     padding: 15px;
     margin-bottom: 15px;
+    width: auto;
 }
 
 #sure-toast-root.bottom {

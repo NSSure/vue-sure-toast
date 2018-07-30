@@ -1,24 +1,18 @@
-import Vue from 'vue'
-import App from './App.vue'
-import SureToast from './sure-toast';
+import { VueSureToast } from './vue-sure-toast';
+import ToastComponent from './vue-sure-toast.vue';
 
-/*
-API Options (Can be override from show call)
-- openDelay = 0
-- enableManualDismiss = true
-- position (top-left, top-right, bottom-right, bottom-left, top, bottom)
-*/
+const SureToast = {
+  install: (Vue, options) => {
+    if(!options) {
+      options = {};
+    }
 
-Vue.use(SureToast, {
-  openDelay: 0,
-  enableManualDismiss: false,
-  position: 'top-right',
-  theme: 'default',
-  limit: 3
-});
+    let instance = new VueSureToast()
+    Vue.component('vue-sure-toast', ToastComponent);
+    Vue.sureToast = Vue.prototype.$sureToast = instance;
+  }
+};
 
-Vue.config.productionTip = false;
+alert("TEST");
 
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+export default SureToast;

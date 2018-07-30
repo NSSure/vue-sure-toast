@@ -1,20 +1,47 @@
 {
   "name": "vue-sure-toast",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Vue Sure Toast is a simple VueJS toast plugin. This plugin contains built in features for theming, position, and more. See below for a full list of features.",
+  "author": "NSSure",
   "private": true,
+  "main": "./src/suer-toast.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "webpack:dev": "npx webpack webpack.config.js",
+    "webpack:devwatch": "npx webpack webpack.config.js -d --hide-modules --watch",
+    "webpack:prod": "npx webpack webpack.config.js -p --hide-modules"
   },
-  "dependencies": {
-    "vue": "^2.5.16"
-  },
+  "keywords": [
+    "vue",
+    "toast",
+    "popup",
+    "dialog",
+    "sure-toast",
+    "vue-sure-toast",
+    "vue-toast",
+    "pop"
+  ],
+  "dependencies": {},
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.55",
+    "@babel/preset-env": "^7.0.0-beta.55",
     "@vue/cli-plugin-babel": "^3.0.0-rc.5",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.5",
     "@vue/cli-service": "^3.0.0-rc.5",
-    "vue-template-compiler": "^2.5.16"
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.5",
+    "css-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "style-loader": "^0.21.0",
+    "vue": "^2.5.16",
+    "vue-loader": "^14.2.2",
+    "vue-style-loader": "^4.1.1",
+    "vue-template-compiler": "^2.5.16",
+    "vue-toasted": "^1.1.24",
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.1.0"
   },
   "eslintConfig": {
     "root": true,
