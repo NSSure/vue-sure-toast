@@ -7,9 +7,9 @@ API Options (Can be override from show call)
 */
 import SureToastComponent from './vue-sure-toast.vue';
 
-const SureToastUtil = {
-    toastsLoaded = 0,
-    toasts = [],
+export const SureToastUtil = function() {
+    toastsLoaded = 0;
+    toasts = [];
 
     show = (message, icon, options) => {
         options = this.setDefaultOptions(options);
@@ -46,21 +46,21 @@ const SureToastUtil = {
         else {
             // Toast limit reached.
         }
-    },
+    }
 
     dismiss = (toast) => {
         if(toast) {
             toast.remove();
             this.toastsLoaded--;
         }
-    },
+    }
 
     dismissAll = () => {
         this.toasts.forEach((toast) => {
             toast.remove();
             this.toastsLoaded--;
         });
-    },
+    }
 
     parseAction = (action) => {
         let anchor = document.createElement("a");
@@ -76,7 +76,7 @@ const SureToastUtil = {
         anchor.addEventListener('click', action.onClick);
     
         return anchor;
-    },
+    }
     
     createToast = (options) => {
         let toast = document.createElement("div");
@@ -91,16 +91,16 @@ const SureToastUtil = {
         this.applyTheme(toast, options.theme);
     
         return toast;
-    },
+    }
     
     applyTheme = (toast, theme) => {
         toast.classList.add(theme);
-    },
+    }
     
     applyPosition = (root, position) => {
         root.className = "";
         root.classList.add(position);
-    },
+    }
     
     setDefaultOptions = (options) => {
         options.openDelay = options.openDelay || 0;
@@ -111,7 +111,7 @@ const SureToastUtil = {
         //options = Object.assign(options, defaultOptions);
     
         return options;
-    },
+    }
     
     configureRootElement = (options) => {
         var root = document.getElementById('sure-toast-root');
@@ -126,7 +126,7 @@ const SureToastUtil = {
         this.applyPosition(root, options.position);
     
         return root;
-    },
+    }
     
     buildToastId = () => {
         return `sure-toast-${Math.floor((Math.random() * 10000) + 1)}`;

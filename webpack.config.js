@@ -8,9 +8,9 @@ module.exports = {
         'vue-sure-toast': './src/vue-sure-toast.js'
     },
     output: {
-		path: './dist',
+        path: path.join(__dirname, 'dist'),
 		publicPath: '/dist/',
-		filename: '[name].js',
+		filename: '[name].min.js',
 		libraryTarget: 'umd'
 	},
     module: {
