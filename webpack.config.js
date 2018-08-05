@@ -5,8 +5,14 @@ const path = require('path');
 module.exports = {
     mode: 'production',
     entry: {
-        'vue-sure-toast.min': './src/vue-sure-toast.js'
+        'vue-sure-toast': './src/vue-sure-toast.js'
     },
+    output: {
+		path: './dist',
+		publicPath: '/dist/',
+		filename: '[name].js',
+		libraryTarget: 'umd'
+	},
     module: {
         rules: [
           {
