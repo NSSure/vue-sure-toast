@@ -1,7 +1,11 @@
 #sure-toast-root {
     position: fixed;
     z-index: 10000;
-    margin: 15px;
+    margin: 25px;
+}
+
+#sure-toast-root .sure-toast:last-child {
+    margin-bottom: 0;
 }
 
 .sure-toast {

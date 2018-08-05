@@ -1,8 +1,88 @@
-const SureToastManager = function() {
-    this.toastsLoaded = 0;
-    this.toasts = [];
+const SureToastManager = function(defaultOptions) {
+    var _toast = {
+        pluginDefaultOptions: { position: 'top-right', openDelay: 0, enableManualDismiss: false, limit: 3, theme: 'default', interval: 5000 },
+        userDefaultOptions: defaultOptions || {},
+        toastsLoaded: 0,
+        toasts: [],
 
-    this.parseAction = (action) => {
+        show: function(message, icon, options) {
+            options = setDefaultOptions(options);
+    
+            if(this.toastsLoaded < options.limit) {
+                var id = buildToastId();
+    
+                let toast = createToast(options);
+                toast.id = id;
+        
+                let messageBody = document.createElement('span');
+                messageBody.innerHTML = `<i class="toast-icon ${icon}"></i> ${message}`;
+    
+                toast.appendChild(messageBody);
+    
+                if(options.action) {
+                    let actionContainer = document.createElement("div");
+                    actionContainer.classList.add("action-container");
+                    
+                    let action = parseAction(options.action);
+                    actionContainer.appendChild(action);
+    
+                    toast.appendChild(actionContainer);
+                }
+    
+                var root = configureRootElement(options, toast);
+                root.appendChild(toast);
+    
+                this.toasts.push(toast);
+                this.toastsLoaded++;
+    
+                setTimeout(() => this.dismiss(toast), options.interval);
+            }
+            else {
+                // Toast limit reached.
+            }
+        },
+    
+        showSuccess: function(message, icon, options) {
+            options.theme = "success";
+            this.show(message, icon, options);
+        },
+    
+        showError: function(message, icon, options) {
+            options.theme = "error";
+            this.show(message, icon, options);
+        },
+    
+        showInfo: function(message, icon, options) {
+            options.theme = "info";
+            this.show(message, icon, options);
+        },
+    
+        showWarning: function(message, icon, options) {
+            options.theme = "warning";
+            this.show(message, icon, options);
+        },
+    
+        dismiss: function(toast) {
+            if(toast) {
+                toast.remove();
+                _toast.toastsLoaded--;
+            }
+        },
+    
+        dismissAll: function() {
+            this.toasts.forEach((toast) => {
+                toast.remove();
+                _toast.toastsLoaded--;
+            });
+        }
+    }
+
+    function fire() {
+        alert('fire');
+    }
+
+    // Abstraction functions only used in the toast manager.  The user has no access to these through the plugin.
+    function parseAction(action) {
         let anchor = document.createElement("a");
     
         anchor.classList.add('toast-action');
@@ -18,46 +98,47 @@ const SureToastManager = function() {
         return anchor;
     }
     
-    this.createToast = (options) => {
+    function createToast(options) {
         let toast = document.createElement("div");
     
         toast.classList.add('sure-toast');
         toast.style = '';
     
         if(options.enableManualDismiss) {
-            toast.addEventListener('click', () => this.dismiss());
+            toast.addEventListener('click', () => _toast.dismiss());
         }
     
-        this.applyTheme(toast, options.theme);
+        applyTheme(toast, options.theme);
     
         return toast;
     }
     
-    this.applyTheme = (toast, theme) => {
+    function applyTheme(toast, theme) {
         toast.classList.add(theme);
     }
     
-    this.applyPosition = (root, position) => {
+    function applyPosition(root, position) {
         root.className = "";
         root.classList.add(position);
     }
     
-    this.setDefaultOptions = (options) => {
-        options = options || {};
+    function setDefaultOptions(options) {
+        mapOptions(_toast.userDefaultOptions, _toast.pluginDefaultOptions);
+        mapOptions(options, _toast.userDefaultOptions);
 
-        options.openDelay = options.openDelay || 0;
-        options.enableManualDismiss = options.enableManualDismiss || false;
-        options.position = options.position || 'top-right';
-        options.limit = options.limit || 3;
-        options.theme = options.theme || 'default';
-        options.interval = options.interval || 5000;
-
-        //options = Object.assign(options, defaultOptions);
-    
         return options;
     }
+
+    function mapOptions(target, source) {
+        target.openDelay = target.openDelay || source.openDelay;
+        target.enableManualDismiss = target.enableManualDismiss || source.enableManualDismiss;
+        target.position = target.position || source.position;
+        target.limit = target.limit || source.limit;
+        target.theme = target.theme || source.theme;
+        target.interval = target.interval || source.interval;
+    }
     
-    this.configureRootElement = (options) => {
+    function configureRootElement(options) {
         var root = document.getElementById('sure-toast-root');
     
         if(!root) {
@@ -67,67 +148,16 @@ const SureToastManager = function() {
             document.body.appendChild(root);
         }
 
-        this.applyPosition(root, options.position);
+        applyPosition(root, options.position);
     
         return root;
     }
     
-    this.buildToastId = () => {
+    function buildToastId() {
         return `sure-toast-${Math.floor((Math.random() * 10000) + 1)}`;
     }
 
-    this.show = (message, icon, options) => {
-        options = this.setDefaultOptions(options);
-
-        if(this.toastsLoaded < options.limit) {
-            var id = this.buildToastId();
-
-            let toast = this.createToast(options);
-            toast.id = id;
-    
-            let messageBody = document.createElement('span');
-            messageBody.innerHTML = `<i class="toast-icon ${icon}"></i> ${message}`;
-
-            toast.appendChild(messageBody);
-
-            if(options.action) {
-                let actionContainer = document.createElement("div");
-                actionContainer.classList.add("action-container");
-                
-                let action = this.parseAction(options.action);
-                actionContainer.appendChild(action);
-
-                toast.appendChild(actionContainer);
-            }
-
-            var root = this.configureRootElement(options, toast);
-            root.appendChild(toast);
-
-            this.toasts.push(toast);
-            this.toastsLoaded++;
-
-            setTimeout(() => this.dismiss(toast), options.interval);
-        }
-        else {
-            // Toast limit reached.
-        }
-    }
-
-    this.dismiss = (toast) => {
-        if(toast) {
-            toast.remove();
-            this.toastsLoaded--;
-        }
-    }
-
-    this.dismissAll = () => {
-        this.toasts.forEach((toast) => {
-            toast.remove();
-            this.toastsLoaded--;
-        });
-    }
-
-    return this;
+    return _toast;
 }
 
 export default SureToastManager;

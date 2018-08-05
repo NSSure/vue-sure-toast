@@ -11,9 +11,9 @@ import SureToastManager from './toast-manager';
 require('./vue-sure-toast.css');
 
 const SureToast = {
-    install(Vue) {
+    install(Vue, options) {
         // Vue.component('SureToastComponent', SureToastComponent);
-        Vue.prototype.$sureToast = new SureToastManager();
+        Vue.prototype.$sureToast = new SureToastManager(options);
     }
 }
 
