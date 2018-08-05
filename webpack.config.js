@@ -1,30 +1,34 @@
+'use strict'
+
 const path = require('path');
-const webpack = require("webpack");
 
 module.exports = {
-    entry: './src/test.js',
-    mode: 'development',
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'vue-sure-toast.min.js',
-        publicPath: '/dist'
+    mode: 'production',
+    entry: {
+        'vue-sure-toast.min': './src/vue-sure-toast.js'
     },
     module: {
         rules: [
-            {
-                test: /\.vue$/,
-                loader: 'vue-loader'
-            },
-            {
-                test: /\js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ["@babel/preset-env"] // Preset used for env setup
-                    }
-                }
-            }
+          {
+            test: /\.vue$/,
+            loader: 'vue-loader'
+          },
+          // this will apply to both plain `.js` files
+          // AND `<script>` blocks in `.vue` files
+          {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            exclude: /node_modules/
+          },
+          // this will apply to both plain `.css` files
+          // AND `<style>` blocks in `.vue` files
+          {
+            test: /\.css$/,
+            use: [
+              'vue-style-loader',
+              'css-loader'
+            ]
+          }
         ]
     }
 }
