@@ -28,7 +28,7 @@ Vue.use(SureToast, options);
 Vue.use(SureToast, {
   position: 'top-left',
   theme: 'warning'
-})
+});
 ```
 
 #### Basic Usage
@@ -77,6 +77,36 @@ this.$sureToast.show('I am a toast message', 'fa fa-info-circle', {
 });
 ```
 
+#### Toast Hooks
+
+There are to methods you can hook into that will get fired when a toast is opened or closed.
+
+```javascript
+// If you want a fire onOpened or onClosed for a specific toast you can do it like so.
+this.$sureToast.show('I am a toast message', 'fa fa-info-circle', {
+  interval: 5000,
+  onOpened(e) {
+    console.log('toast opened');
+  },
+  onClosed(e) {
+    console.log('toast closed');
+  }
+});
+```
+
+If you want to fire the onOpened and onClosed for all the toasts you can pass define your functions in the plugin options.
+
+```javascript
+Vue.use(SureToast, {
+  onOpened() {
+    console.log('toast opened');
+  },
+  onClosed() {
+    console.log('toast closed');
+  }
+});
+```
+
 Any plugin level options that are passed through the show function will be ignored by the plugin.
 
 #### Plugin/Toast Options
@@ -93,7 +123,8 @@ Below is a full list of the available options for both the defaults and individu
 | limit | number | any whole number | 3  | How many toasts can be displayed at once |
 | persist | boolean | true, false | false  | Forces toasts to remain on screen (overrides interval) |
 | reverseToastOrder | boolean | true, false | false  | If true displays the latest toasts at the bottom |
-| onOpen | boolean | true, false | false  | If true displays the latest toasts at the bottom |
+| onOpened | function | N/A | undefined  | Executed after a toast is opened |
+| onClosed | function | N/A | undefined  | Executed after a toast is closed |
 
 #### Plugin ONLY Options
 
