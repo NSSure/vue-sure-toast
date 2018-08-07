@@ -1,6 +1,15 @@
 const SureToastManager = function(defaultOptions) {
     var _toast = {
-        pluginDefaultOptions: { position: 'top-right', openDelay: 0, enableManualDismiss: false, limit: 3, theme: 'default', interval: 5000 },
+        pluginDefaultOptions: { 
+            position: 'top-right', 
+            openDelay: 0, 
+            enableManualDismiss: false, 
+            limit: 3, 
+            theme: 'default', 
+            persist: false,
+            reverseToastOrder: false, 
+            interval: 5000 
+        },
         userDefaultOptions: defaultOptions || {},
         toastsLoaded: 0,
         toasts: [],
@@ -19,23 +28,46 @@ const SureToastManager = function(defaultOptions) {
     
                 toast.appendChild(messageBody);
     
+                let actionContainer = createActionContainer(toast);
+
                 if(options.action) {
-                    let actionContainer = document.createElement("div");
-                    actionContainer.classList.add("action-container");
-                    
-                    let action = parseAction(options.action);
-                    actionContainer.appendChild(action);
-    
-                    toast.appendChild(actionContainer);
+                    actionContainer.appendChild(createAction(options.action));
                 }
-    
+                else {
+                    if(Array.isArray(options.actions)) {
+                        options.actions.map((action) => {
+                            actionContainer.appendChild(createAction(action));
+                        });
+                    }
+                }
+
+                toast.appendChild(actionContainer);
                 var root = configureRootElement(options, toast);
-                root.appendChild(toast);
-    
+
+                // This is false by default so new toasts are added at the top.
+                if(options.reverseToastOrder) {
+                    root.appendChild(toast);
+                }
+                else {
+                    root.insertBefore(toast, root.firstChild);
+                }
+
+                if(typeof options.onOpened === "function") {
+                    options.onOpened();
+                }
+                
                 this.toasts.push(toast);
                 this.toastsLoaded++;
     
-                setTimeout(() => this.dismiss(toast), options.interval);
+                if(!options.persist) {
+                    setTimeout(() => {
+                        this.dismiss(toast);
+                        
+                        if(typeof options.onClosed === "function") {
+                            options.onClosed();
+                        }
+                    }, options.interval);
+                }
             }
             else {
                 // Toast limit reached.
@@ -77,12 +109,7 @@ const SureToastManager = function(defaultOptions) {
         }
     }
 
-    function fire() {
-        alert('fire');
-    }
-
-    // Abstraction functions only used in the toast manager.  The user has no access to these through the plugin.
-    function parseAction(action) {
+    function createAction(action) {
         let anchor = document.createElement("a");
     
         anchor.classList.add('toast-action');
@@ -91,11 +118,19 @@ const SureToastManager = function(defaultOptions) {
         if(action.icon) {
             anchor.innerHTML += `<i class="${action.icon}"></i>`;
         }
-        
+
         anchor.innerHTML += action.text;
         anchor.addEventListener('click', action.onClick);
     
         return anchor;
+    }
+
+    function createActionContainer(toast) {
+        let actionContainer = document.createElement("div");
+        actionContainer.id = `action-container-${toast.id}`;
+        actionContainer.classList.add("action-container");
+
+        return actionContainer;
     }
     
     function createToast(options) {
@@ -105,14 +140,14 @@ const SureToastManager = function(defaultOptions) {
         toast.style = '';
     
         if(options.enableManualDismiss) {
-            toast.addEventListener('click', () => _toast.dismiss());
+            toast.addEventListener('click', () => _toast.dismiss(toast));
         }
     
         applyTheme(toast, options.theme);
     
         return toast;
     }
-    
+
     function applyTheme(toast, theme) {
         toast.classList.add(theme);
     }
@@ -123,19 +158,30 @@ const SureToastManager = function(defaultOptions) {
     }
     
     function setDefaultOptions(options) {
+        mapPluginLevelOnlyOptions(options);
         mapOptions(_toast.userDefaultOptions, _toast.pluginDefaultOptions);
         mapOptions(options, _toast.userDefaultOptions);
 
         return options;
     }
 
+    function mapPluginLevelOnlyOptions(target) {
+        target.position = _toast.userDefaultOptions.position || _toast.pluginDefaultOptions.position;
+        target.limit = _toast.userDefaultOptions.limit || _toast.pluginDefaultOptions.limit;
+        target.reverseToastOrder = _toast.userDefaultOptions.reverseToastOrder || _toast.pluginDefaultOptions.reverseToastOrder;
+    }
+
     function mapOptions(target, source) {
+        // map option properties.
         target.openDelay = target.openDelay || source.openDelay;
         target.enableManualDismiss = target.enableManualDismiss || source.enableManualDismiss;
-        target.position = target.position || source.position;
-        target.limit = target.limit || source.limit;
         target.theme = target.theme || source.theme;
         target.interval = target.interval || source.interval;
+        target.persist = target.persist || source.persist;
+
+        // map option functions.
+        target.onClosed = target.onClosed || source.onClosed;
+        target.onOpened = target.onOpened || source.onOpened;
     }
     
     function configureRootElement(options) {
@@ -156,6 +202,8 @@ const SureToastManager = function(defaultOptions) {
     function buildToastId() {
         return `sure-toast-${Math.floor((Math.random() * 10000) + 1)}`;
     }
+
+
 
     return _toast;
 }

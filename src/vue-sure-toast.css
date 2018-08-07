@@ -11,6 +11,7 @@
 .sure-toast {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     position: relative;
     background-color: #353535;
     color: #FEFEFE;
@@ -52,11 +53,23 @@
 }
 
 .sure-toast.success {
-    background-color: #28A745;
+    background-color: #D4EDDA;
+    color: #155724;
+}
+
+.sure-toast.warning {
+    background-color: #FFF3CD;
+    color: #A46404;
 }
 
 .sure-toast.error {
-    background-color: #CB3837
+    background-color: #F8D7DA;
+    color: #881C24;
+}
+
+.sure-toast.info {
+    background-color: #D4EEF9;
+    color: #004085;
 }
 
 .sure-toast .toast-icon {
@@ -81,14 +94,18 @@
     font-size: 0.8rem;
 }
 
-.sure-toast .toast-action:hover {
-    text-decoration: underline;
+.sure-toast.success .toast-action {
+    color: #155724;
 }
 
-.sure-toast.success .toast-action {
-    color: #3FEAAB;
+.sure-toast.warning .toast-action {
+    color: #A46404;
 }
 
 .sure-toast.error .toast-action {
-    color: #FFAEAD;
+    color: #881C24;
+}
+
+.sure-toast.info .toast-action {
+    color: #004085;
 }

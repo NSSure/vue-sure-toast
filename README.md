@@ -1,6 +1,12 @@
 ## Vue Sure Toast
 Vue Sure Toast is a simple VueJS toast plugin.  This plugin contains built in features for theming, position, and more.  See below for a full list of features.
 
+#### Samples
+
+Here are the basic themes built into the plugin.
+
+![Alt text](docs/images/toast-samples.PNG?raw=true "Toast Samples")
+
 #### Installation
 
 First import the plugin.
@@ -41,7 +47,7 @@ this.$sureToast(message, icon, options);
 The options parameter can contain an action that will be appended to the toast an a link.
 
 ```javascript
-this.$sureToast.show('Settings updated successfully', 'fa fa-info-circle', {
+this.$sureToast.show('I am a toast message', 'fa fa-info-circle', {
   interval: 5000,
   enableManualDismiss: true,
   action: { 
@@ -51,18 +57,53 @@ this.$sureToast.show('Settings updated successfully', 'fa fa-info-circle', {
 });
 ```
 
+You can also pass an array of actions when displaying a toast.  If you pass both the 'action' and 'actions' property
+the 'action' property will take precedence over 'actions'.  Make sure you pass one to save yourself some trouble.
+
+```javascript
+this.$sureToast.show('I am a toast message', 'fa fa-info-circle', {
+  interval: 5000,
+  enableManualDismiss: true,
+  actions: [
+    { 
+      text: 'OPEN', 
+      onClick: (e, toast) => { alert('OPEN CLICKED: ' + toast); } 
+    },
+    { 
+      text: 'DISMISS', 
+      onClick: (e, toast) => { alert('CLOSE CLICKED: ' + toast); } 
+    }
+  ]
+});
+```
+
 Any plugin level options that are passed through the show function will be ignored by the plugin.
 
-#### Options
+#### Plugin/Toast Options
 
 Below is a full list of the available options for both the defaults and individual toasts.
 
-| Option        | Type           | Values  | Default |
-| ------------- |:-------------:| -----:| --------:|
-| openDelay      | number | any number (milliseconds) | 5000ms  |
-| enableManualDismiss      | boolean      |   true, false | false |
-| position | string      |    'top-left', 'top-right', 'bottom-right', 'bottom-left', 'top', 'bottom' | 'top-right'  |
-| theme | string | 'success', 'error', 'info', 'warning', 'default' | 'default' 
+| Option        | Type           | Values  | Default | Description |
+| ------------- |:-------------:| -----:| --------:|----------------:|
+| openDelay      | number | any number (milliseconds) | 0ms  | Delays the toast opening |
+| interval | number | any number (milliseconds) | 5000ms  | The duration the toast is visible |
+| enableManualDismiss      | boolean      |   true, false | false | Allows toasts to be manually dismissed |
+| position | string      |    'top-left', 'top-right', 'bottom-right', 'bottom-left', 'top', 'bottom' | 'top-right'  | Screen position of the toast |
+| theme | string | 'success', 'error', 'info', 'warning', 'default' | 'default'  | The color scheme of the toast |
+| limit | number | any whole number | 3  | How many toasts can be displayed at once |
+| persist | boolean | true, false | false  | Forces toasts to remain on screen (overrides interval) |
+| reverseToastOrder | boolean | true, false | false  | If true displays the latest toasts at the bottom |
+| onOpen | boolean | true, false | false  | If true displays the latest toasts at the bottom |
+
+#### Plugin ONLY Options
+
+Below is a full list of the options that can only be set at the plugin level (passed to the Vue.use function).
+
+| Option        | Type           | Values  | Default | Description |
+| ------------- |:-------------:| -----:| --------:|----------------:|
+| position | string      |    'top-left', 'top-right', 'bottom-right', 'bottom-left', 'top', 'bottom' | 'top-right'  | Screen position of the toast |
+| limit | number | any whole number | 3  | How many toasts can be displayed at once |
+| reverseToastOrder | boolean | true, false | false  | If true displays the latest toasts at the bottom |
 
 #### Methods
 
