@@ -165,3 +165,7 @@ Below is a full list of properties availble through the Vue instance.
 
 This plugin was inspired by [vue-toasted](https://github.com/shakee93/vue-toasted)
 
+#### Development
+
+Developed by: NSSure
+
