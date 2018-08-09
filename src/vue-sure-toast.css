@@ -10,26 +10,40 @@
 
 .sure-toast {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     position: relative;
     background-color: #353535;
     color: #FEFEFE;
-    padding: 15px;
     margin-bottom: 15px;
     width: auto;
+    animation: fadein .5s;
 }
 
 #sure-toast-root.bottom {
     bottom: 0;
     left: 0;
-    width: 100%;
+    right: 0;
 }
 
 #sure-toast-root.top {
     top: 0;
     left: 0;
-    width: 100%;
+    right: 0;
+}
+
+#sure-toast-root.top-flush {
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;   
+}
+
+#sure-toast-root.bottom-flush {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
 }
 
 #sure-toast-root.top-left {
@@ -72,19 +86,34 @@
     color: #004085;
 }
 
+.sure-toast .sure-toast-content {
+    padding: 15px;
+}
+
+.sure-toast .sure-toast-header {
+    margin-bottom: 10px;
+}
+
+.sure-toast .sure-toast-content .sure-toast-header .sure-toast-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
 .sure-toast .toast-icon {
     margin-right: 10px;
     margin-left: 10px;
 }
 
 .sure-toast .action-container {
-    margin-right: 10px;
-    margin-left: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-bottom: 15px;
 }
 
 .sure-toast .toast-action {
-    margin-right: 10px;
-    margin-left: 10px;
     text-decoration: none;
     color: #9DC2FA;
     text-transform: uppercase;
@@ -92,6 +121,10 @@
     font-weight: 600;
     cursor: pointer;
     font-size: 0.8rem;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 .sure-toast.success .toast-action {
@@ -108,4 +141,9 @@
 
 .sure-toast.info .toast-action {
     color: #004085;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }

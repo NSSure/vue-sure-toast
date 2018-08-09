@@ -4,12 +4,10 @@ import App from './app.vue'
 import SureToast from '../dist/vue-sure-toast.min';
 
 Vue.use(SureToast, { 
-  position: 'bottom-right', 
-  limit: 10,
+  limit: 5,
   persist: false,
   reverseToastOrder: false,
   enableManualDismiss: false,
-  persist: true,
   onClosed() {
     console.log('toast closed');
   },

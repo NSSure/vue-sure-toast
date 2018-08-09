@@ -1,5 +1,7 @@
 const SureToastManager = function(defaultOptions) {
     var _toast = {
+        positions: ['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top', 'bottom', 'top-flush', 'bottom-flush'],
+        themes: ['default', 'success', 'warning', 'error', 'info'],
         pluginDefaultOptions: { 
             position: 'top-right', 
             openDelay: 0, 
@@ -8,7 +10,8 @@ const SureToastManager = function(defaultOptions) {
             theme: 'default', 
             persist: false,
             reverseToastOrder: false, 
-            interval: 5000 
+            interval: 5000,
+            title: null
         },
         userDefaultOptions: defaultOptions || {},
         toastsLoaded: 0,
@@ -18,31 +21,20 @@ const SureToastManager = function(defaultOptions) {
             options = setDefaultOptions(options);
     
             if(this.toastsLoaded < options.limit) {
-                var id = buildToastId();
-    
-                let toast = createToast(options);
-                toast.id = id;
-        
-                let messageBody = document.createElement('span');
-                messageBody.innerHTML = `<i class="toast-icon ${icon}"></i> ${message}`;
-    
-                toast.appendChild(messageBody);
-    
-                let actionContainer = createActionContainer(toast);
+                let toast = createToast(message, icon, options);
 
-                if(options.action) {
-                    actionContainer.appendChild(createAction(options.action));
+                if(typeof options.onOpened === "function") {
+                    options.onOpened();
                 }
-                else {
-                    if(Array.isArray(options.actions)) {
-                        options.actions.map((action) => {
-                            actionContainer.appendChild(createAction(action));
-                        });
-                    }
-                }
+                
+                this.toasts.push(toast);
+                this.toastsLoaded++;
 
-                toast.appendChild(actionContainer);
                 var root = configureRootElement(options, toast);
+
+                if(options.enableManualDismiss) {
+                    toast.addEventListener('click', () => _toast.dismiss(toast));
+                }
 
                 // This is false by default so new toasts are added at the top.
                 if(options.reverseToastOrder) {
@@ -51,13 +43,6 @@ const SureToastManager = function(defaultOptions) {
                 else {
                     root.insertBefore(toast, root.firstChild);
                 }
-
-                if(typeof options.onOpened === "function") {
-                    options.onOpened();
-                }
-                
-                this.toasts.push(toast);
-                this.toastsLoaded++;
     
                 if(!options.persist) {
                     setTimeout(() => {
@@ -109,6 +94,98 @@ const SureToastManager = function(defaultOptions) {
         }
     }
 
+    function configureRootElement(options) {
+        var root = document.getElementById('sure-toast-root');
+    
+        if(!root) {
+            root = document.createElement("div");
+            root.id = "sure-toast-root";
+    
+            document.body.appendChild(root);
+        }
+
+        applyPosition(root, options.position);
+    
+        return root;
+    }
+
+    function createToast(message, icon, options) {
+        var id = buildToastId();
+    
+        let toast = document.createElement("div");
+    
+        toast.classList.add('sure-toast');
+        toast.style = '';
+        toast.id = id;
+    
+        applyTheme(toast, options.theme);
+
+        toast.appendChild(createToastContent(message, icon, options));
+
+        if(options.action || (options.actions && Array.isArray(options.actions) && options.actions.length > 0)) {
+            toast.appendChild(createToastActions(options));
+        }
+
+        return toast;
+    }
+
+    function createToastContent(message, icon, options) {
+        let toastContent = document.createElement("div");
+        toastContent.classList.add('sure-toast-content');
+
+        if(options.title) {
+            toastContent.appendChild(createToastTitle(options.title));
+        }
+
+        toastContent.appendChild(createToastMessage(message, icon));
+
+        return toastContent;
+    }
+
+    function createToastTitle(title) {
+        let titleContainer = document.createElement("div");
+        titleContainer.classList.add('sure-toast-header');
+
+        let titleText = document.createElement("label");
+        titleText.classList.add('sure-toast-title');
+        
+        titleText.innerText = title;
+
+        titleContainer.appendChild(titleText);
+
+        return titleContainer
+    }
+
+    function createToastMessage(message, icon) {
+        let messageContainer = document.createElement("div");
+        messageContainer.classList.add("sure-toast-message");
+
+        let messageBody = document.createElement('span');
+
+        messageBody.innerHTML = `<i class="toast-icon ${icon}"></i> ${message}`;
+
+        messageContainer.appendChild(messageBody);
+
+        return messageContainer;
+    }
+
+    function createToastActions(options) {
+        let actionContainer = createActionContainer();
+
+        if(options.action) {
+            actionContainer.appendChild(createAction(options.action));
+        }
+        else {
+            if(Array.isArray(options.actions)) {
+                options.actions.map((action) => {
+                    actionContainer.appendChild(createAction(action));
+                });
+            }
+        }
+
+        return actionContainer;
+    }
+
     function createAction(action) {
         let anchor = document.createElement("a");
     
@@ -125,29 +202,13 @@ const SureToastManager = function(defaultOptions) {
         return anchor;
     }
 
-    function createActionContainer(toast) {
+    function createActionContainer() {
         let actionContainer = document.createElement("div");
-        actionContainer.id = `action-container-${toast.id}`;
         actionContainer.classList.add("action-container");
 
         return actionContainer;
     }
     
-    function createToast(options) {
-        let toast = document.createElement("div");
-    
-        toast.classList.add('sure-toast');
-        toast.style = '';
-    
-        if(options.enableManualDismiss) {
-            toast.addEventListener('click', () => _toast.dismiss(toast));
-        }
-    
-        applyTheme(toast, options.theme);
-    
-        return toast;
-    }
-
     function applyTheme(toast, theme) {
         toast.classList.add(theme);
     }
@@ -183,27 +244,10 @@ const SureToastManager = function(defaultOptions) {
         target.onClosed = target.onClosed || source.onClosed;
         target.onOpened = target.onOpened || source.onOpened;
     }
-    
-    function configureRootElement(options) {
-        var root = document.getElementById('sure-toast-root');
-    
-        if(!root) {
-            root = document.createElement("div");
-            root.id = "sure-toast-root";
-    
-            document.body.appendChild(root);
-        }
 
-        applyPosition(root, options.position);
-    
-        return root;
-    }
-    
     function buildToastId() {
         return `sure-toast-${Math.floor((Math.random() * 10000) + 1)}`;
     }
-
-
 
     return _toast;
 }
