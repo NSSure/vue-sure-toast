@@ -33,6 +33,9 @@
       <p class="demo-details">Manual Dimiss</p>
       <input type="checkbox" id="checkbox" v-model="toastManualDismiss">
 
+      <p class="demo-details">Progress Bar</p>
+      <input type="checkbox" id="checkbox" v-model="toastProgressBar">
+
       <p class="demo-details">Toast Interval (ms)</p>
       <input type="text" v-model="toastInterval" placeholder="Title" />
 
@@ -62,10 +65,14 @@ export default {
       toastMessage: 'My toast message',
       toastPersist: false,
       toastManualDismiss: false,
+      toastProgressBar: true,
       toastInterval: 2000,
       actionText: '',
       actions: []
     }
+  },
+  mounted() {
+
   },
   methods: {
     addAction() {
@@ -82,11 +89,12 @@ export default {
       root.classList.add(this.rootPosition);
     },
     showToast() {
-      this.$sureToast.show(this.toastMessage, 'fa fa-info-circle', {
+      this.$sureToast.show(this.toastMessage, {
         title: this.toastTitle,
         theme: this.toastTheme,
         persist: this.toastPersist,
         enableManualDismiss: this.toastManualDismiss,
+        showProgressBar: this.showProgressBar,
         interval: this.toastInterval,
         actions: this.actions
       });
