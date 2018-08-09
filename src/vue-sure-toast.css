@@ -99,11 +99,6 @@
     font-weight: bold;
 }
 
-.sure-toast .toast-icon {
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
 .sure-toast .action-container {
     display: flex;
     flex-direction: row;

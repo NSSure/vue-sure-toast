@@ -17,11 +17,11 @@ const SureToastManager = function(defaultOptions) {
         toastsLoaded: 0,
         toasts: [],
 
-        show: function(message, icon, options) {
+        show: function(message, options) {
             options = setDefaultOptions(options);
     
             if(this.toastsLoaded < options.limit) {
-                let toast = createToast(message, icon, options);
+                let toast = createToast(message, options);
 
                 if(typeof options.onOpened === "function") {
                     options.onOpened();
@@ -59,24 +59,24 @@ const SureToastManager = function(defaultOptions) {
             }
         },
     
-        showSuccess: function(message, icon, options) {
+        showSuccess: function(message, options) {
             options.theme = "success";
-            this.show(message, icon, options);
+            this.show(message, options);
         },
     
-        showError: function(message, icon, options) {
+        showError: function(message, options) {
             options.theme = "error";
-            this.show(message, icon, options);
+            this.show(message, options);
         },
     
-        showInfo: function(message, icon, options) {
+        showInfo: function(message, options) {
             options.theme = "info";
-            this.show(message, icon, options);
+            this.show(message, options);
         },
     
-        showWarning: function(message, icon, options) {
+        showWarning: function(message, options) {
             options.theme = "warning";
-            this.show(message, icon, options);
+            this.show(message, options);
         },
     
         dismiss: function(toast) {
@@ -109,7 +109,7 @@ const SureToastManager = function(defaultOptions) {
         return root;
     }
 
-    function createToast(message, icon, options) {
+    function createToast(message, options) {
         var id = buildToastId();
     
         let toast = document.createElement("div");
@@ -120,7 +120,7 @@ const SureToastManager = function(defaultOptions) {
     
         applyTheme(toast, options.theme);
 
-        toast.appendChild(createToastContent(message, icon, options));
+        toast.appendChild(createToastContent(message, options));
 
         if(options.action || (options.actions && Array.isArray(options.actions) && options.actions.length > 0)) {
             toast.appendChild(createToastActions(options));
@@ -129,7 +129,7 @@ const SureToastManager = function(defaultOptions) {
         return toast;
     }
 
-    function createToastContent(message, icon, options) {
+    function createToastContent(message, options) {
         let toastContent = document.createElement("div");
         toastContent.classList.add('sure-toast-content');
 
@@ -137,7 +137,7 @@ const SureToastManager = function(defaultOptions) {
             toastContent.appendChild(createToastTitle(options.title));
         }
 
-        toastContent.appendChild(createToastMessage(message, icon));
+        toastContent.appendChild(createToastMessage(message));
 
         return toastContent;
     }
@@ -156,13 +156,13 @@ const SureToastManager = function(defaultOptions) {
         return titleContainer
     }
 
-    function createToastMessage(message, icon) {
+    function createToastMessage(message) {
         let messageContainer = document.createElement("div");
         messageContainer.classList.add("sure-toast-message");
 
         let messageBody = document.createElement('span');
 
-        messageBody.innerHTML = `<i class="toast-icon ${icon}"></i> ${message}`;
+        messageBody.innerHTML = `${message}`;
 
         messageContainer.appendChild(messageBody);
 
