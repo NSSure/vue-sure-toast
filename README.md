@@ -119,7 +119,6 @@ Below is a full list of the available options for both the defaults and individu
 
 | Option        | Type           | Values  | Default | Description |
 | ------------- |:-------------:| -----:| --------:|----------------:|
-| openDelay      | number | any number (milliseconds) | 0ms  | Delays the toast opening |
 | interval | number | any number (milliseconds) | 5000ms  | The duration the toast is visible |
 | enableManualDismiss      | boolean      |   true, false | false | Allows toasts to be manually dismissed |
 | position | string      |    'top-left', 'top-right', 'bottom-right', 'bottom-left', 'top', 'bottom' | 'top-right'  | Screen position of the toast |
@@ -127,6 +126,7 @@ Below is a full list of the available options for both the defaults and individu
 | limit | number | any whole number | 3  | How many toasts can be displayed at once |
 | persist | boolean | true, false | false  | Forces toasts to remain on screen (overrides interval) |
 | reverseToastOrder | boolean | true, false | false  | If true displays the latest toasts at the bottom |
+| showProgressBar | boolean | true, false | false  | If true displays the a progress bar across the bottom of toast with displaying the remaining time left for the toast |
 | onOpened | function | N/A | undefined  | Executed after a toast is opened |
 | onClosed | function | N/A | undefined  | Executed after a toast is closed |
 

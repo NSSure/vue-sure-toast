@@ -4,7 +4,6 @@ const SureToastManager = function(defaultOptions) {
         themes: ['default', 'success', 'warning', 'error', 'info'],
         pluginDefaultOptions: { 
             position: 'top-right', 
-            openDelay: 0, 
             enableManualDismiss: false, 
             limit: 3, 
             theme: 'default', 
@@ -46,8 +45,6 @@ const SureToastManager = function(defaultOptions) {
                 }
     
                 if(!options.persist) {
-                    let progressInterval;
-
                     if(options.showProgressBar) {
                         let progressBarIdSuffix = generateRandomId();
                         var progressBarId = `progress-bar-${progressBarIdSuffix}`;
@@ -63,10 +60,6 @@ const SureToastManager = function(defaultOptions) {
                     setTimeout(() => {
                         this.dismiss(toast);
 
-                        if(progressInterval) {
-                            clearInterval(progressInterval);
-                        }
-                        
                         if(typeof options.onClosed === "function") {
                             options.onClosed();
                         }
@@ -261,17 +254,18 @@ const SureToastManager = function(defaultOptions) {
     }
 
     function mapOptions(target, source) {
+        // TODO: Fix this mess.
+
         // map option properties.
-        target.openDelay = target.openDelay || source.openDelay;
-        target.enableManualDismiss = target.enableManualDismiss || source.enableManualDismiss;
-        target.showProgressBar = target.showProgressBar || source.showProgressBar;
-        target.theme = target.theme || source.theme;
-        target.interval = target.interval || source.interval;
-        target.persist = target.persist || source.persist;
+        target.enableManualDismiss = target.enableManualDismiss !== undefined ? target.enableManualDismiss : source.enableManualDismiss;
+        target.showProgressBar = target.showProgressBar !== undefined ? target.showProgressBar : source.showProgressBar;
+        target.theme = target.theme !== undefined ? target.theme : source.theme;
+        target.interval = target.interval !== undefined ? target.interval : source.interval;
+        target.persist = target.persist !== undefined ? target.persist : source.persist;
 
         // map option functions.
-        target.onClosed = target.onClosed || source.onClosed;
-        target.onOpened = target.onOpened || source.onOpened;
+        target.onClosed = target.onClosed !== undefined ? target.onClosed : source.onClosed
+        target.onOpened = target.onOpened !== undefined ? target.onOpened : source.onOpened
     }
 
     function generateRandomId() {
