@@ -54,17 +54,10 @@ const SureToastManager = function(defaultOptions) {
             
                         let progressBar = createProgressBar();
                         progressBar.id = progressBarId;
+
+                        progressBar.style = `animation: collapse ${options.interval / 1000}s; animation-timing-function: linear;`;
             
                         toast.appendChild(progressBar);
-
-                        let widthMinus = 1 / (options.interval / 1000);
-            
-                        progressInterval = setInterval(() => {
-                            let progress = document.getElementById(progressBarId);
-                            let width = progress.offsetWidth;
-                            let narrowed = width - widthMinus;
-                            progress.style.width = narrowed + "px";
-                        }, 13);
                     }
 
                     setTimeout(() => {

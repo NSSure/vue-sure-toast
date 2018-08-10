@@ -94,7 +94,7 @@ export default {
         theme: this.toastTheme,
         persist: this.toastPersist,
         enableManualDismiss: this.toastManualDismiss,
-        showProgressBar: this.showProgressBar,
+        showProgressBar: this.toastProgressBar,
         interval: this.toastInterval,
         actions: this.actions
       });
