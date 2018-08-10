@@ -11,7 +11,8 @@ const SureToastManager = function(defaultOptions) {
             persist: false,
             reverseToastOrder: false, 
             interval: 5000,
-            title: null
+            title: null,
+            showProgressBar: true
         },
         userDefaultOptions: defaultOptions || {},
         toastsLoaded: 0,
@@ -45,8 +46,33 @@ const SureToastManager = function(defaultOptions) {
                 }
     
                 if(!options.persist) {
+                    let progressInterval;
+
+                    if(options.showProgressBar) {
+                        let progressBarIdSuffix = generateRandomId();
+                        var progressBarId = `progress-bar-${progressBarIdSuffix}`;
+            
+                        let progressBar = createProgressBar();
+                        progressBar.id = progressBarId;
+            
+                        toast.appendChild(progressBar);
+
+                        let widthMinus = 1 / (options.interval / 1000);
+            
+                        progressInterval = setInterval(() => {
+                            let progress = document.getElementById(progressBarId);
+                            let width = progress.offsetWidth;
+                            let narrowed = width - widthMinus;
+                            progress.style.width = narrowed + "px";
+                        }, 13);
+                    }
+
                     setTimeout(() => {
                         this.dismiss(toast);
+
+                        if(progressInterval) {
+                            clearInterval(progressInterval);
+                        }
                         
                         if(typeof options.onClosed === "function") {
                             options.onClosed();
@@ -110,13 +136,14 @@ const SureToastManager = function(defaultOptions) {
     }
 
     function createToast(message, options) {
-        var id = buildToastId();
+        let toastIdSuffix = generateRandomId();
+        let toastId = `sure-toast-${toastIdSuffix}`;
     
         let toast = document.createElement("div");
     
         toast.classList.add('sure-toast');
         toast.style = '';
-        toast.id = id;
+        toast.id = toastId;
     
         applyTheme(toast, options.theme);
 
@@ -191,10 +218,6 @@ const SureToastManager = function(defaultOptions) {
     
         anchor.classList.add('toast-action');
         anchor.setAttribute('href', '#');
-    
-        if(action.icon) {
-            anchor.innerHTML += `<i class="${action.icon}"></i>`;
-        }
 
         anchor.innerHTML += action.text;
         anchor.addEventListener('click', action.onClick);
@@ -207,6 +230,18 @@ const SureToastManager = function(defaultOptions) {
         actionContainer.classList.add("action-container");
 
         return actionContainer;
+    }
+
+    function createProgressBar(id) {
+        let progressBar = document.createElement('div');
+        progressBar.classList.add('progress-bar');
+
+        let bar = document.createElement('div');
+        bar.classList.add('bar');
+
+        progressBar.appendChild(bar);
+
+        return progressBar;
     }
     
     function applyTheme(toast, theme) {
@@ -236,6 +271,7 @@ const SureToastManager = function(defaultOptions) {
         // map option properties.
         target.openDelay = target.openDelay || source.openDelay;
         target.enableManualDismiss = target.enableManualDismiss || source.enableManualDismiss;
+        target.showProgressBar = target.showProgressBar || source.showProgressBar;
         target.theme = target.theme || source.theme;
         target.interval = target.interval || source.interval;
         target.persist = target.persist || source.persist;
@@ -245,8 +281,8 @@ const SureToastManager = function(defaultOptions) {
         target.onOpened = target.onOpened || source.onOpened;
     }
 
-    function buildToastId() {
-        return `sure-toast-${Math.floor((Math.random() * 10000) + 1)}`;
+    function generateRandomId() {
+        return Math.floor((Math.random() * 10000) + 1);
     }
 
     return _toast;
