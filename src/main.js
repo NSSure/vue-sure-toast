@@ -5,6 +5,7 @@ import SureToast from '../dist/vue-sure-toast.min';
 
 Vue.use(SureToast, { 
   limit: 5,
+  position: 'top-right',
   persist: false,
   reverseToastOrder: false,
   enableManualDismiss: false,

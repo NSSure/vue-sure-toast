@@ -18,23 +18,17 @@ const SureToastManager = function(defaultOptions) {
         toasts: [],
 
         show: function(message, options) {
+            // Make sure the options passed to the show method are always at least an empty object.
+            options = options ? options : {};
             options = setDefaultOptions(options);
     
             if(this.toastsLoaded < options.limit) {
-                let toast = createToast(message, options);
+                let toast = configureToast(message, options);
 
-                if(typeof options.onOpened === "function") {
-                    options.onOpened();
-                }
-                
                 this.toasts.push(toast);
                 this.toastsLoaded++;
 
-                var root = configureRootElement(options, toast);
-
-                if(options.enableManualDismiss) {
-                    toast.addEventListener('click', () => _toast.dismiss(toast));
-                }
+                var root = configureRootElement(options);
 
                 // This is false by default so new toasts are added at the top.
                 if(options.reverseToastOrder) {
@@ -42,28 +36,6 @@ const SureToastManager = function(defaultOptions) {
                 }
                 else {
                     root.insertBefore(toast, root.firstChild);
-                }
-    
-                if(!options.persist) {
-                    if(options.showProgressBar) {
-                        let progressBarIdSuffix = generateRandomId();
-                        var progressBarId = `progress-bar-${progressBarIdSuffix}`;
-            
-                        let progressBar = createProgressBar();
-                        progressBar.id = progressBarId;
-
-                        progressBar.style = `animation: collapse ${options.interval / 1000}s; animation-timing-function: linear;`;
-            
-                        toast.appendChild(progressBar);
-                    }
-
-                    setTimeout(() => {
-                        this.dismiss(toast);
-
-                        if(typeof options.onClosed === "function") {
-                            options.onClosed();
-                        }
-                    }, options.interval);
                 }
             }
             else {
@@ -103,6 +75,13 @@ const SureToastManager = function(defaultOptions) {
                 toast.remove();
                 _toast.toastsLoaded--;
             });
+        },
+
+        generateElementToast: function(message, options) {
+            options = options ? options : {};
+            options = setDefaultOptions(options);
+            options.position = 'relative';
+            return configureToast(message, options);
         }
     }
 
@@ -119,6 +98,42 @@ const SureToastManager = function(defaultOptions) {
         applyPosition(root, options.position);
     
         return root;
+    }
+
+    function configureToast(message, options) {
+        let toast = createToast(message, options);
+
+        if(typeof options.onOpened === "function") {
+            options.onOpened();
+        }
+        
+        if(options.enableManualDismiss) {
+            toast.addEventListener('click', () => _toast.dismiss(toast));
+        }
+
+        if(!options.persist) {
+            if(options.showProgressBar) {
+                let progressBarIdSuffix = generateRandomId();
+                var progressBarId = `progress-bar-${progressBarIdSuffix}`;
+    
+                let progressBar = createProgressBar();
+                progressBar.id = progressBarId;
+
+                progressBar.style = `animation: collapse ${options.interval / 1000}s; animation-timing-function: linear;`;
+    
+                toast.appendChild(progressBar);
+            }
+
+            setTimeout(() => {
+                _toast.dismiss(toast);
+
+                if(typeof options.onClosed === "function") {
+                    options.onClosed();
+                }
+            }, options.interval);
+        }
+
+        return toast;
     }
 
     function createToast(message, options) {

@@ -1,62 +1,101 @@
 <template>
-  <div id="app">
-    <label class="demo-title">Vue Sure Toast Demo</label>
-    <p class="demo-detail">Displaying the built in themed toasts using the default plugin options.</p>
+  <div id="app" class="row justify-content-center">
+    <div class="col-6">
+        <div class="card bg-light my-4">
+          <div class="card-body">
+            <h3>Vue Sure Toast Demo</h3>
+            <hr>
+            <p class="demo-detail">Displaying the built in themed toasts using the default plugin options.</p>
+            <div class="plugin-configuration">
+              <div class="form-inline">
+                <div class="form-group mr-2">
+                  <select v-model="rootPosition" v-on:change="changePosition()" class="form-control">
+                    <option v-for="position of $sureToast.positions" :key="position">{{position}}</option>
+                  </select>
+                </div>
+                <button type="button" class="btn btn-default mr-2" v-on:click="showToast()">Show Toast</button>
+                <button type="button" class="btn btn-default mr-2" v-on:click="$sureToast.dismissAll()">Clear All</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            Toast Configuration
+          </div>
+          <div class="card-body">
+            <div class="form">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Toast Title</label>
+                    <input type="text" v-model="toastTitle" class="form-control" placeholder="Title" />
+                  </div>
+                  <div class="form-group">
+                    <label>Toast Message</label>
+                    <input type="text" v-model="toastMessage" class="form-control" placeholder="Message" />
+                  </div>
 
-    <div class="plugin-configuration">
-      <p class="demo-details"><strong>Plugin Configuration</strong></p>
+                  <div class="form-group">
+                    <label>Toast Theme</label>
+                    <select v-model="toastTheme" class="form-control">
+                      <option v-for="theme of $sureToast.themes" :key="theme">{{theme}}</option>
+                    </select>
+                  </div>
 
-      <select v-model="rootPosition" v-on:change="changePosition()">
-        <option v-for="position of $sureToast.positions" :key="position">{{position}}</option>
-      </select>
+                  <div class="form-group from-check">
+                    <input type="checkbox" id="toastPersist" v-model="toastPersist" />
+                    <label class="form-check-label" for="toastPersist">Persist Toast</label>
+                  </div>
 
-      <button type="button" v-on:click="showToast()">Show Toast</button>
-      <button type="button" v-on:click="$sureToast.dismissAll()">Clear All</button>
-    </div>
-    <div class="toast-configuration">
-      <p class="demo-detail"><strong>Toast Configuration</strong></p>
+                  <div class="form-group from-check">
+                    <input type="checkbox" id="toastManualDismiss" v-model="toastManualDismiss" />
+                    <label class="form-check-label" for="toastManualDismiss">Manual Dismiss</label>
+                  </div>
 
-      <p class="demo-details">Toast Title</p>
-      <input type="text" v-model="toastTitle" placeholder="Title" />
+                  <div class="form-group from-check">
+                    <input type="checkbox" id="toastProgressBar" v-model="toastProgressBar" />
+                    <label class="form-check-label" for="toastProgressBar">Progress Bar</label>
+                  </div>
 
-      <p class="demo-details">Toast Message</p>
-      <input type="text" v-model="toastMessage" placeholder="Message" />
-
-      <p class="demo-details">Toast Theme</p>
-      <select v-model="toastTheme">
-        <option v-for="theme of $sureToast.themes" :key="theme">{{theme}}</option>
-      </select>
-
-      <p class="demo-details">Persist Toast</p>
-      <input type="checkbox" id="checkbox" v-model="toastPersist">
-
-      <p class="demo-details">Manual Dimiss</p>
-      <input type="checkbox" id="checkbox" v-model="toastManualDismiss">
-
-      <p class="demo-details">Progress Bar</p>
-      <input type="checkbox" id="checkbox" v-model="toastProgressBar">
-
-      <p class="demo-details">Toast Interval (ms)</p>
-      <input type="text" v-model="toastInterval" placeholder="Title" />
-
-      <p class="demo-details">Actions</p>
-      
-      <input type="text" v-model="actionText" placeholder="Action Title" /><br><br>
-
-      <button type="button" v-on:click="addAction()">Add Action</button>
-      <button type="button" v-on:click="actions = []">Clear All</button>
-      <ul>
-        <li v-for="(action, index) of actions" :key="index">
-          {{action.text}}
-          <button type="button" v-on:click="actions.splice(index, 1)">Remove</button>
-        </li>
-      </ul>
+                  <div class="form-group">
+                    <label>Toast Interval (ms)</label>
+                    <input type="text" v-model="toastInterval" class="form-control" placeholder="Title" />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Toast Message</label>
+                    <input type="text" v-model="actionText" class="form-control" placeholder="Message" />
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-default" v-on:click="addAction()">Add Action</button>
+                    <button type="button" class="btn btn-default" v-on:click="actions = []">Clear All</button>
+                  </div>
+                  <div class="card">
+                    <div class="card-header">
+                      Toast Actions
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li v-for="(action, index) of actions" :key="index" class="list-group-item d-flex justify-content-between align-items-center">
+                        {{action.text}}
+                        <button type="button" class="btn btn-danger" v-on:click="actions.splice(index, 1)"><i class="fa fa-close"></i></button>
+                      </li>
+                    </ul>
+                    <div class="text-center p-3" v-if="actions.length === 0">No actions</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  name: 'app',
   data() {
     return {
       rootPosition: 'top-right',
@@ -108,16 +147,6 @@ export default {
     font-family: Verdana, Geneva, sans-serif;
     padding: 25px;
     font-size: 12px;
-    width: 50%;
-    margin: 0 auto;
-  }
-
-  .demo-title {
-    font-size: 2rem;
-  }
-
-  .demo-detail {
-    font-size: 1.25rem;
   }
 </style>
 
