@@ -3,7 +3,7 @@
   "version": "1.0.10",
   "description": "Vue Sure Toast is a simple VueJS toast plugin. This plugin contains built in features for theming, position, and more. See below for a full list of features.",
   "author": "NSSure",
-  "main": "./dist/vue-sure-toast.min.js",
+  "main": "dist/vue-sure-toast.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
