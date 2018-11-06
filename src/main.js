@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './app.vue'
 
-import SureToast from '../dist/vue-sure-toast.min';
+import SureToast from './vue-sure-toast.js';
 
 Vue.use(SureToast, { 
   limit: 5,
