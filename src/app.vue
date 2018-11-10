@@ -1,6 +1,6 @@
 <template>
-  <div id="app" class="row justify-content-center">
-    <div class="col-6">
+  <div id="app">
+    <div class="container">
         <div class="card bg-light my-4">
           <div class="card-body">
             <h3>Vue Sure Toast Demo</h3>
@@ -9,12 +9,12 @@
             <div class="plugin-configuration">
               <div class="form-inline">
                 <div class="form-group mr-2">
-                  <select v-model="rootPosition" v-on:change="changePosition()" class="form-control">
+                  <select v-model="rootPosition" @change="changePosition()" class="form-control">
                     <option v-for="position of $sureToast.positions" :key="position">{{position}}</option>
                   </select>
                 </div>
-                <button type="button" class="btn btn-default mr-2" v-on:click="showToast()">Show Toast</button>
-                <button type="button" class="btn btn-default mr-2" v-on:click="$sureToast.dismissAll()">Clear All</button>
+                <button type="button" class="btn btn-default mr-2" @click="showToast()">Show Toast</button>
+                <button type="button" class="btn btn-default mr-2" @click="$sureToast.dismissAll()">Clear All</button>
               </div>
             </div>
           </div>
@@ -26,7 +26,7 @@
           <div class="card-body">
             <div class="form">
               <div class="row">
-                <div class="col-6">
+                <div class="col-md-6 col-sm-12">
                   <div class="form-group">
                     <label>Toast Title</label>
                     <input type="text" v-model="toastTitle" class="form-control" placeholder="Title" />
@@ -63,7 +63,7 @@
                     <input type="text" v-model="toastInterval" class="form-control" placeholder="Title" />
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-sm-12 col-md-6">
                   <div class="form-group">
                     <label>Toast Message</label>
                     <input type="text" v-model="actionText" class="form-control" placeholder="Message" />
@@ -124,8 +124,11 @@ export default {
     },
     changePosition() {
       let root = document.getElementById('sure-toast-root');
-      root.classList = '';
-      root.classList.add(this.rootPosition);
+
+      if (root) {
+        root.classList = '';
+        root.classList.add(this.rootPosition);
+      }
     },
     showToast() {
       this.$sureToast.show(this.toastMessage, {

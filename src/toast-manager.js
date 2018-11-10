@@ -93,9 +93,10 @@ const SureToastManager = function(defaultOptions) {
             root.id = "sure-toast-root";
     
             document.body.appendChild(root);
-        }
 
-        applyPosition(root, options.position);
+            // The position is only applied when the plugin initializes it can't be adjusted per toast.
+            applyPosition(root, options.position);
+        }
     
         return root;
     }

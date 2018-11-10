@@ -16,7 +16,7 @@ Toast with the progress bar enabled (choppiness is just the gif).
 First import the plugin.
 
 ```javascript
-import SureToast from './vue-sure-toast';
+import SureToast from 'vue-sure-toast';
 ```
 
 Then configure the plugin with Vue.
