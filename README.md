@@ -41,11 +41,11 @@ Displaying a toast message from within a component.
 
 ```javascript
 // The simplest method for displaying toast.
-this.$sureToast(message);
+this.$sureToast.show(message);
 
-this.$sureToast(message, icon);
+this.$sureToast.show(message, icon);
 
-this.$sureToast(message, icon, options);
+this.$sureToast.show(message, icon, options);
 ```
 
 The options parameter can contain an action that will be appended to the toast an a link.
