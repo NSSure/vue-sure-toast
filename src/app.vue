@@ -46,16 +46,19 @@
                   <div class="form-group from-check">
                     <input type="checkbox" id="toastPersist" v-model="toastPersist" />
                     <label class="form-check-label" for="toastPersist">Persist Toast</label>
+                    <small class="form-text text-muted">Permanently persists the toast until the toast is manually dismissed</small>
                   </div>
 
                   <div class="form-group from-check">
                     <input type="checkbox" id="toastManualDismiss" v-model="toastManualDismiss" />
                     <label class="form-check-label" for="toastManualDismiss">Manual Dismiss</label>
+                    <small class="form-text text-muted">Allows clicks on the toast to dismiss the toast</small>
                   </div>
 
                   <div class="form-group from-check">
                     <input type="checkbox" id="toastProgressBar" v-model="toastProgressBar" />
                     <label class="form-check-label" for="toastProgressBar">Progress Bar</label>
+                    <small class="form-text text-muted">Displays a progress bar displaying the remaining toast interval</small>
                   </div>
 
                   <div class="form-group">
@@ -69,7 +72,7 @@
                     <input type="text" v-model="actionText" class="form-control" placeholder="Message" />
                   </div>
                   <div class="form-group">
-                    <button type="button" class="btn btn-default" v-on:click="addAction()">Add Action</button>
+                    <button type="button" class="btn btn-default" v-on:click="addAction()" :disabled="!actionText">Add Action</button>
                     <button type="button" class="btn btn-default" v-on:click="actions = []">Clear All</button>
                   </div>
                   <div class="card">
@@ -150,6 +153,9 @@ export default {
     font-family: Verdana, Geneva, sans-serif;
     padding: 25px;
     font-size: 12px;
+  }
+  .poison {
+    background-color: purple;
   }
 </style>
 

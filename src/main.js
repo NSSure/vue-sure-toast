@@ -5,10 +5,12 @@ import SureToast from './vue-sure-toast.js';
 
 Vue.use(SureToast, { 
   limit: 5,
-  position: 'bottom-flush',
+  popOldest: true,
+  position: 'top-right',
   persist: false,
   reverseToastOrder: false,
   enableManualDismiss: false,
+  theme: 'success',
   onClosed() {
     console.log('toast closed');
   },

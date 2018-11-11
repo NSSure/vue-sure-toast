@@ -38,9 +38,6 @@ const SureToastManager = function(defaultOptions) {
                     root.insertBefore(toast, root.firstChild);
                 }
             }
-            else {
-                // Toast limit reached.
-            }
         },
     
         showSuccess: function(message, options) {
@@ -80,7 +77,6 @@ const SureToastManager = function(defaultOptions) {
         generateElementToast: function(message, options) {
             options = options ? options : {};
             options = setDefaultOptions(options);
-            options.position = 'relative';
             return configureToast(message, options);
         }
     }
@@ -277,6 +273,7 @@ const SureToastManager = function(defaultOptions) {
         target.showProgressBar = target.showProgressBar !== undefined ? target.showProgressBar : source.showProgressBar;
         target.theme = target.theme !== undefined ? target.theme : source.theme;
         target.interval = target.interval !== undefined ? target.interval : source.interval;
+        target.persist = target.persist !== undefined ? target.persist : source.persist;
         target.persist = target.persist !== undefined ? target.persist : source.persist;
 
         // map option functions.
