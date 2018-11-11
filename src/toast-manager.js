@@ -274,7 +274,6 @@ const SureToastManager = function(defaultOptions) {
         target.theme = target.theme !== undefined ? target.theme : source.theme;
         target.interval = target.interval !== undefined ? target.interval : source.interval;
         target.persist = target.persist !== undefined ? target.persist : source.persist;
-        target.persist = target.persist !== undefined ? target.persist : source.persist;
 
         // map option functions.
         target.onClosed = target.onClosed !== undefined ? target.onClosed : source.onClosed
