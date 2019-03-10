@@ -37,7 +37,9 @@
     "vue-template-compiler": "^2.5.16",
     "vue-toasted": "^1.1.24",
     "webpack": "^4.16.3",
-    "webpack-cli": "^3.1.0"
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": ">=3.1.11",
+    "lodash": ">=4.17.11"
   },
   "eslintConfig": {
     "root": true,
