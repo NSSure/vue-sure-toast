@@ -1,16 +1,6 @@
 ## Vue Sure Toast
 Vue Sure Toast is a simple VueJS toast plugin.  This plugin contains built in features for theming, position, and more.  See below for a full list of features.
 
-#### Samples
-
-Here are the basic themes built into the plugin.
-
-![Alt text](docs/images/toast-samples.PNG?raw=true "Toast Samples")
-
-Toast with the progress bar enabled (choppiness is just the gif).
-
-![Alt text](docs/gifs/progress-sample.gif?raw=true "Toast progress bar sample")
-
 #### Installation
 
 First import the plugin.
