@@ -3,12 +3,13 @@ const SureToastManager = function(defaultOptions) {
         positions: ['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top', 'bottom', 'top-flush', 'bottom-flush'],
         themes: ['default', 'success', 'warning', 'error', 'info'],
         pluginDefaultOptions: { 
-            position: 'top-right', 
-            enableManualDismiss: false, 
-            limit: 3, 
+            position: 'top-right', // plugin level only
+            reverseToastOrder: false, // plugin level only
+            limit: 3, // plugin level only
+            animation: { in: "toast-reveal-right", out: "toast-collapse-top" }, // plugin level only
+            enableManualDismiss: false,
             theme: 'default', 
             persist: false,
-            reverseToastOrder: false, 
             interval: 5000,
             title: null,
             showProgressBar: true
@@ -122,11 +123,16 @@ const SureToastManager = function(defaultOptions) {
             }
 
             setTimeout(() => {
-                _toast.dismiss(toast);
+                applyOutAnimation(toast, options.animation.out);
 
-                if(typeof options.onClosed === "function") {
-                    options.onClosed();
-                }
+                // Wait to execute the toast dismiss until the animation has finished. Currently the animation runs for 500ms.
+                setTimeout(() => {
+                    _toast.dismiss(toast);
+
+                    if(typeof options.onClosed === "function") {
+                        options.onClosed();
+                    }
+                }, 500);
             }, options.interval);
         }
 
@@ -144,11 +150,12 @@ const SureToastManager = function(defaultOptions) {
         toast.id = toastId;
     
         applyTheme(toast, options.theme);
+        applyInAnimation(toast, options.animation.in);
 
         toast.appendChild(createToastContent(message, options));
 
         if(options.action || (options.actions && Array.isArray(options.actions) && options.actions.length > 0)) {
-            toast.appendChild(createToastActions(options));
+            toast.appendChild(createToastActions(toast, options));
         }
 
         return toast;
@@ -194,16 +201,16 @@ const SureToastManager = function(defaultOptions) {
         return messageContainer;
     }
 
-    function createToastActions(options) {
+    function createToastActions(toast, options) {
         let actionContainer = createActionContainer();
 
         if(options.action) {
-            actionContainer.appendChild(createAction(options.action));
+            actionContainer.appendChild(createAction(toast, options.action));
         }
         else {
             if(Array.isArray(options.actions)) {
                 options.actions.map((action) => {
-                    actionContainer.appendChild(createAction(action));
+                    actionContainer.appendChild(createAction(toast, action));
                 });
             }
         }
@@ -211,14 +218,17 @@ const SureToastManager = function(defaultOptions) {
         return actionContainer;
     }
 
-    function createAction(action) {
+    function createAction(toast, action) {
         let anchor = document.createElement("a");
     
         anchor.classList.add('toast-action');
         anchor.setAttribute('href', '#');
 
         anchor.innerHTML += action.text;
-        anchor.addEventListener('click', action.onClick);
+
+        anchor.addEventListener('click', (e) => {
+            action.onClick.call(this, e, toast);
+        });
     
         return anchor;
     }
@@ -245,6 +255,14 @@ const SureToastManager = function(defaultOptions) {
     function applyTheme(toast, theme) {
         toast.classList.add(theme);
     }
+
+    function applyInAnimation(toast, inAnimation) {
+        toast.classList.add(inAnimation);
+    }
+
+    function applyOutAnimation(toast, outAnimation) {
+        toast.classList.add(outAnimation);
+    }
     
     function applyPosition(root, position) {
         root.className = "";
@@ -263,6 +281,7 @@ const SureToastManager = function(defaultOptions) {
         target.position = _toast.userDefaultOptions.position || _toast.pluginDefaultOptions.position;
         target.limit = _toast.userDefaultOptions.limit || _toast.pluginDefaultOptions.limit;
         target.reverseToastOrder = _toast.userDefaultOptions.reverseToastOrder || _toast.pluginDefaultOptions.reverseToastOrder;
+        target.animation = _toast.userDefaultOptions.animation || _toast.pluginDefaultOptions.animation;
     }
 
     function mapOptions(target, source) {

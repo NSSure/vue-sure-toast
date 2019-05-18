@@ -2,6 +2,9 @@
     position: fixed;
     z-index: 10000;
     margin: 25px;
+    min-width: 250px;
+    height: auto;
+    overflow: hidden;
 }
 
 #sure-toast-root .sure-toast:last-child {
@@ -9,10 +12,10 @@
 }
 
 .sure-toast {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
     background-color: #353535;
     color: #FEFEFE;
     margin-bottom: 15px;
@@ -158,6 +161,79 @@
 
 .sure-toast.info .progress-bar {
     background-color: #C0DAE5;
+}
+
+/* Animations */
+.toast-reveal-right {
+    animation: reveal-right .5s forwards;
+}
+
+.toast-reveal-left {
+    animation: reveal-left .5s forwards;
+}
+
+.toast-reveal-top {
+    animation: reveal-top .5s forwards;
+}
+
+.toast-reveal-bottom {
+    animation: reveal-bottom .5s forwards;
+}
+
+.toast-collapse-right {
+    animation: collapse-right .5s forwards;
+}
+
+.toast-collapse-left {
+    animation: collapse-left .5s forwards;
+}
+
+.toast-collapse-top {
+    animation: collapse-top .5s forwards;
+}
+
+.toast-collapse-bottom {
+    animation: collapse-bottom .5s forwards;
+}
+
+@keyframes reveal-right {
+    from { right: -500px; }
+    to { right: 0; }
+}
+
+@keyframes reveal-left {
+    from { left: -500px; }
+    to { left: 0; }
+}
+
+@keyframes reveal-top {
+    from { top: -500px; }
+    to { top: 0; }
+}
+
+@keyframes reveal-bottom {
+    from { bottom: -500px; }
+    to { bottom: 0; }
+}
+
+@keyframes collapse-right {
+    from { right: 0; }
+    to { right: -500px; }
+}
+
+@keyframes collapse-left {
+    from { left: 0; }
+    to { left: -500px; }
+}
+
+@keyframes collapse-top {
+    from { top: 0; }
+    to { top: -500px; }
+}
+
+@keyframes collapse-bottom {
+    from { bottom: 0; }
+    to { bottom: -500px; }
 }
 
 @keyframes collapse {

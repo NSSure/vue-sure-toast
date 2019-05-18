@@ -121,7 +121,7 @@ export default {
       this.actions.push({
         text: this.actionText,
         onClick: (e, toast) => {
-          alert('You clicked a toast!');
+          this.$sureToast.dismiss(toast);
         }
       })
     },
@@ -131,6 +131,8 @@ export default {
       if (root) {
         root.classList = '';
         root.classList.add(this.rootPosition);
+
+        this.$sureToast.userDefaultOptions.position = this.rootPosition;
       }
     },
     showToast() {
